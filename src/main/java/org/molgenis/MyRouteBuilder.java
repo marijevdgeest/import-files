@@ -1,28 +1,23 @@
 package org.molgenis;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 
 /**
  * A Camel Java DSL Router
  */
-public class MyRouteBuilder extends RouteBuilder {
+public class MyRouteBuilder extends RouteBuilder
+{
 
-    /**
-     * Let's configure the Camel routing rules using Java code...
-     */
-    public void configure() {
-
-        // here is a sample which processes the input files
-        // (leaving them in place - see the 'noop' flag)
-        // then performs content based routing on the message using XPath
-        from("file:src/data?noop=true")
-            .choice()
-                .when(xpath("/person/city = 'London'"))
-                    .log("UK message")
-                    .to("file:target/messages/uk")
-                .otherwise()
-                    .log("Other message")
-                    .to("file:target/messages/others");
-    }
-
+	/**
+	 * Let's configure the Camel routing rules using Java code...
+	 */
+	@Override
+	public void configure()
+	{
+		from("file:src/data?noop=true").process(new DeconvolutionPlotProcessor())
+				.setHeader("x-Molgenis-token", constant("e9efe6d4c130435898017ce5f68ba82a"))
+				.setHeader(Exchange.HTTP_METHOD, constant("POST"))
+				.to("https4://molgenis01.target.rug.nl/api/v1/DeconvolutionPlot").log("in.headers.Location");
+	}
 }
