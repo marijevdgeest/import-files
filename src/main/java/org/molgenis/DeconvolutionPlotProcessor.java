@@ -15,13 +15,13 @@ public class DeconvolutionPlotProcessor implements Processor
 	public void process(Exchange exchange) throws Exception
 	{
 		String fileName = exchange.getIn().getHeader("CamelFileName", String.class);
-		Pattern pattern = Pattern.compile("^(([^-]+)\\-(.+)\\-([^-]+))\\-ggplot.png$");
+		Pattern pattern = Pattern.compile("^(([^-]+)\\-(.+)\\-([^-]+))\\-LLDeep.png$");
 		Matcher matcher = pattern.matcher(fileName);
 		if (matcher.matches())
 		{
 			String name = matcher.group(1);
-			String disease = matcher.group(2);
-			String gene = matcher.group(3);
+			String disease = matcher.group(2).replace("_", " ");
+			String gene = matcher.group(3).replace("_", "-");
 			String snp = matcher.group(4);
 			MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
 			entityBuilder.addTextBody("name", name);
